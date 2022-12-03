@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>images/config.jpg</file>
+        <file>images/copy.jpg</file>
+        <file>images/cut.jpg</file>
+        <file>images/exit.jpg</file>
+        <file>images/help.jpg</file>
+        <file>images/new.jpg</file>
+        <file>images/open.jpg</file>
+        <file>images/paste.jpg</file>
+        <file>images/redo.jpg</file>
+        <file>images/run.jpg</file>
+        <file>images/save.jpg</file>
+        <file>images/tool.jpg</file>
+        <file>images/undo.jpg</file>
+        <file>images/find.jpg</file>
+        <file>images/replace.jpg</file>
+        <file>images/saveAs.jpg</file>
+    </qresource>
+</RCC>
