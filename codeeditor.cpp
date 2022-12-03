@@ -3,6 +3,30 @@
 
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
+/*    keyWordsList << "auto" << "bool" << "break"
+                 << "case" << "char" << "class"
+                 << "const" << "continue" << "default"
+                 << "do" << "double" << "else"
+                 << "enum" << "explicit" << "extern"
+                 << "float" << "for" << "friend"
+                 << "goto" << "if" << "inline"
+                 << "int" << "long" << "restrict"
+                 << "return" << "namespace"<< "operator"
+                 << "private" << "protected" << "public"
+                 << "short" << "signals" << "signed"
+                 << "sizeof" << "switch" << "while"
+                 << "slots" << "static" << "struct"
+                 << "template" << "typedef" << "typename"
+                 << "union" << "unsigned" << "virtual"
+                 << "void" << "volatile" ;
+
+    keyWordsComplter = new QCompleter(keyWordsList);
+    keyWordsComplter->setWidget(this);
+    keyWordsComplter->setCaseSensitivity(Qt::CaseInsensitive);
+    keyWordsComplter->setCompletionMode(QCompleter::PopupCompletion);
+    keyWordsComplter->setMaxVisibleItems(6);
+    connect(keyWordsComplter, SIGNAL(activated(QString)), this, SLOT(onCompleterActivated(QString)));
+*/
     lineNumberArea = new LineNumberArea(this);
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
@@ -12,7 +36,96 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
 }
+/*
+QString CodeEditor::wordUnderCursor() const
+{
+    //不断向左移动cursor，并选中字符，并查看选中的单词中是否含有空格——空格作为单词的分隔符
+    QTextCursor curTextCursor = textCursor();
+    QString selectedString;
+    while (curTextCursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1))
+    {
+        selectedString = curTextCursor.selectedText();
+        if (selectedString.startsWith(QString(" ")) || selectedString.startsWith(QChar(0x422029)))
+        {
+            break;
+        }
 
+    }
+    if (selectedString.startsWith(QChar(0x422029)))
+    {
+        selectedString.replace(0, 1, QChar(' '));
+    }
+    return selectedString.trimmed();
+
+}
+
+//protected Events
+void CodeEditor::keyPressEvent(QKeyEvent *e)
+{
+    if (keyWordsComplter)
+    {
+        if (keyWordsComplter->popup()->isVisible())
+        {
+            switch(e->key())
+            {
+                case Qt::Key_Escape:
+                case Qt::Key_Enter:
+                case Qt::Key_Return:
+                case Qt::Key_Tab:
+                    e->ignore();
+                    return;
+                default:
+                    break;
+            }
+        }
+        QPlainTextEdit::keyPressEvent(e);
+        completerPrefix = this->wordUnderCursor();
+        keyWordsComplter->setCompletionPrefix(completerPrefix); // 通过设置QCompleter的前缀，来让Completer寻找关键词
+        curTextCursorRect = cursorRect();
+        if (completerPrefix == "")
+        {
+            return;
+        }
+        //qDebug() << "completerPrefix:" << completerPrefix << " match_count:" << keyWordsComplter->completionCount() << " completionColumn:"<<keyWordsComplter->completionColumn();
+        if (keyWordsComplter->completionCount() > 0)
+        {
+            keyWordsComplter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
+        }
+    }
+}
+//public slots
+void CodeEditor::onCompleterActivated(const QString &completion)
+{
+    QString completionPrefix = wordUnderCursor(),
+            shouldInertText = completion;
+    curTextCursor = textCursor();
+    if (!completion.contains(completionPrefix))
+    {
+        // delete the previously typed.
+        curTextCursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, completionPrefix.size());
+        curTextCursor.clearSelection();
+    }
+    else
+    {
+        // 补全相应的字符
+        shouldInertText = shouldInertText.replace(
+            shouldInertText.indexOf(completionPrefix), completionPrefix.size(), "");
+    }
+    curTextCursor.insertText(shouldInertText);
+}
+
+void CodeEditor::onCurosPosChange()
+{
+    QString completionPrefix = wordUnderCursor();
+    if (completionPrefix == "")
+    {
+        keyWordsComplter->setCompletionPrefix("----");
+        keyWordsComplter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
+    }
+    highlightCurrentLine();
+
+}
+*/
 int CodeEditor::lineNumberAreaWidth()
 {
     int digits = 1;

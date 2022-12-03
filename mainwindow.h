@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include <codeeditor.h>
 #include <encodingdialog.h>
 #include <finddialog.h>
 #include <replacedialog.h>
@@ -57,7 +58,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QTextEdit *currentTextEdit;
+    //QTextEdit *currentTextEdit;
+    CodeEditor *currentTextEdit;
     syntaxHighlighter *highlighter;
     QString fileName;
     QString filePath;

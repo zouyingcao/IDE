@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "codeeditor.h"
 #include <QtWidgets>
 #include <QtDebug>
 #include <QTextCodec>
@@ -67,10 +68,14 @@ void MainWindow::setIconsEnable()
 void MainWindow::setContentEnable()
 {
     if(currentTextEdit!=NULL){
-        connect(currentTextEdit,&QTextEdit::redoAvailable,ui->redo,&QAction::setEnabled);
-        connect(currentTextEdit,&QTextEdit::undoAvailable,ui->undo,&QAction::setEnabled);
-        connect(currentTextEdit, &QTextEdit::copyAvailable, ui->cut, &QAction::setEnabled);
-        connect(currentTextEdit, &QTextEdit::copyAvailable, ui->copy, &QAction::setEnabled);
+        //connect(currentTextEdit,&QTextEdit::redoAvailable,ui->redo,&QAction::setEnabled);
+        //connect(currentTextEdit,&QTextEdit::undoAvailable,ui->undo,&QAction::setEnabled);
+        //connect(currentTextEdit, &QTextEdit::copyAvailable, ui->cut, &QAction::setEnabled);
+        //connect(currentTextEdit, &QTextEdit::copyAvailable, ui->copy, &QAction::setEnabled);
+        connect(currentTextEdit,&QPlainTextEdit::redoAvailable,ui->redo,&QAction::setEnabled);
+        connect(currentTextEdit,&QPlainTextEdit::undoAvailable,ui->undo,&QAction::setEnabled);
+        connect(currentTextEdit, &QPlainTextEdit::copyAvailable, ui->cut, &QAction::setEnabled);
+        connect(currentTextEdit, &QPlainTextEdit::copyAvailable, ui->copy, &QAction::setEnabled);
     }
 }
 
@@ -82,7 +87,8 @@ void MainWindow::on_newFile_triggered()
     page->setAttribute(Qt::WA_DeleteOnClose);//关闭时自动销毁
     page->setToolTip("");//放保存路径,新建时为空
     page->setLayout(new QGridLayout);
-    QTextEdit *TextEdit = new QTextEdit();
+    //QTextEdit *TextEdit = new QTextEdit();
+    CodeEditor *TextEdit = new CodeEditor();
     TextEdit->setAttribute(Qt::WA_DeleteOnClose);
     TextEdit->setObjectName("textEdit");
     page->layout()->addWidget(TextEdit);
@@ -316,7 +322,8 @@ void MainWindow::doSaveBeforeDelete()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-    currentTextEdit = ui->tabWidget->currentWidget()->findChild<QTextEdit *>("textEdit");
+    //currentTextEdit = ui->tabWidget->currentWidget()->findChild<QTextEdit *>("textEdit");
+    currentTextEdit = ui->tabWidget->currentWidget()->findChild<CodeEditor *>("textEdit");
     setContentEnable();
     fileName = ui->tabWidget->tabText(index);
     filePath = ui->tabWidget->tabToolTip(index);
