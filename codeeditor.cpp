@@ -1,9 +1,11 @@
 #include <QtWidgets>
 #include "codeeditor.h"
+#include <QCompleter>
 
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
+  , keyWordsCompleter{nullptr}
 {
-/*    keyWordsList << "auto" << "bool" << "break"
+    keyWordsList << "auto" << "bool" << "break"
                  << "case" << "char" << "class"
                  << "const" << "continue" << "default"
                  << "do" << "double" << "else"
@@ -20,13 +22,14 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
                  << "union" << "unsigned" << "virtual"
                  << "void" << "volatile" ;
 
-    keyWordsComplter = new QCompleter(keyWordsList);
-    keyWordsComplter->setWidget(this);
-    keyWordsComplter->setCaseSensitivity(Qt::CaseInsensitive);
-    keyWordsComplter->setCompletionMode(QCompleter::PopupCompletion);
-    keyWordsComplter->setMaxVisibleItems(6);
-    connect(keyWordsComplter, SIGNAL(activated(QString)), this, SLOT(onCompleterActivated(QString)));
-*/
+    keyWordsCompleter = new QCompleter(keyWordsList);
+    keyWordsCompleter->setWidget(this);
+    keyWordsCompleter->setCaseSensitivity(Qt::CaseInsensitive); // 设置大小写区分，不区大小写
+    keyWordsCompleter->setCompletionMode(QCompleter::PopupCompletion);// 设置向用户提供补全的方式
+    keyWordsCompleter->setMaxVisibleItems(6);
+
+    connect(keyWordsCompleter, SIGNAL(activated(QString)), this, SLOT(onCompleterActivated(QString)));
+
     lineNumberArea = new LineNumberArea(this);
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
@@ -36,63 +39,8 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
 }
-/*
-QString CodeEditor::wordUnderCursor() const
-{
-    //不断向左移动cursor，并选中字符，并查看选中的单词中是否含有空格——空格作为单词的分隔符
-    QTextCursor curTextCursor = textCursor();
-    QString selectedString;
-    while (curTextCursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1))
-    {
-        selectedString = curTextCursor.selectedText();
-        if (selectedString.startsWith(QString(" ")) || selectedString.startsWith(QChar(0x422029)))
-        {
-            break;
-        }
 
-    }
-    if (selectedString.startsWith(QChar(0x422029)))
-    {
-        selectedString.replace(0, 1, QChar(' '));
-    }
-    return selectedString.trimmed();
 
-}
-
-//protected Events
-void CodeEditor::keyPressEvent(QKeyEvent *e)
-{
-    if (keyWordsComplter)
-    {
-        if (keyWordsComplter->popup()->isVisible())
-        {
-            switch(e->key())
-            {
-                case Qt::Key_Escape:
-                case Qt::Key_Enter:
-                case Qt::Key_Return:
-                case Qt::Key_Tab:
-                    e->ignore();
-                    return;
-                default:
-                    break;
-            }
-        }
-        QPlainTextEdit::keyPressEvent(e);
-        completerPrefix = this->wordUnderCursor();
-        keyWordsComplter->setCompletionPrefix(completerPrefix); // 通过设置QCompleter的前缀，来让Completer寻找关键词
-        curTextCursorRect = cursorRect();
-        if (completerPrefix == "")
-        {
-            return;
-        }
-        //qDebug() << "completerPrefix:" << completerPrefix << " match_count:" << keyWordsComplter->completionCount() << " completionColumn:"<<keyWordsComplter->completionColumn();
-        if (keyWordsComplter->completionCount() > 0)
-        {
-            keyWordsComplter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
-        }
-    }
-}
 //public slots
 void CodeEditor::onCompleterActivated(const QString &completion)
 {
@@ -113,19 +61,74 @@ void CodeEditor::onCompleterActivated(const QString &completion)
     }
     curTextCursor.insertText(shouldInertText);
 }
+QString CodeEditor::wordUnderCursor() const
+{
+    //不断向左移动cursor，并选中字符，并查看选中的单词中是否含有空格——空格作为单词的分隔符
+    QTextCursor curTextCursor = textCursor();
+    QString selectedString;
+    while (curTextCursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1))
+    {
+        selectedString = curTextCursor.selectedText();
+        if (selectedString.startsWith(QString(" ")) || selectedString.startsWith(QChar(0x422029)))
+        {
+            break;
+        }
+
+    }
+    if (selectedString.startsWith(QChar(0x422029)))
+    {
+        selectedString.replace(0, 1, QChar(' '));
+    }
+    return selectedString.trimmed();
+}
+
+//protected Events
+void CodeEditor::keyPressEvent(QKeyEvent *e)
+{
+    if (keyWordsCompleter)
+    {
+        if (keyWordsCompleter->popup()->isVisible())
+        {
+            switch(e->key())
+            {
+                case Qt::Key_Escape:
+                case Qt::Key_Enter:
+                case Qt::Key_Return:
+                case Qt::Key_Tab:
+                    e->ignore();
+                    return;
+                default:
+                    break;
+            }
+        }
+        QPlainTextEdit::keyPressEvent(e);
+        completerPrefix = this->wordUnderCursor();
+        keyWordsCompleter->setCompletionPrefix(completerPrefix); // 通过设置QCompleter的前缀，来让Completer寻找关键词
+        curTextCursorRect = cursorRect();
+        if (completerPrefix == "")
+        {
+            return;
+        }
+        //qDebug() << "completerPrefix:" << completerPrefix << " match_count:" << keyWordsComplter->completionCount() << " completionColumn:"<<keyWordsComplter->completionColumn();
+        if (keyWordsCompleter->completionCount() > 0)
+        {
+            keyWordsCompleter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
+        }
+    }
+}
 
 void CodeEditor::onCurosPosChange()
 {
     QString completionPrefix = wordUnderCursor();
     if (completionPrefix == "")
     {
-        keyWordsComplter->setCompletionPrefix("----");
-        keyWordsComplter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
+        keyWordsCompleter->setCompletionPrefix("----");
+        keyWordsCompleter->complete(QRect(curTextCursorRect.left(), curTextCursorRect.top(), 60, 15));
     }
     highlightCurrentLine();
 
 }
-*/
+
 int CodeEditor::lineNumberAreaWidth()
 {
     int digits = 1;

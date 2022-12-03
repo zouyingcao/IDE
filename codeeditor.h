@@ -21,32 +21,32 @@ class CodeEditor : public QPlainTextEdit
 public:
     CodeEditor(QWidget *parent = 0);
 
-//    QString wordUnderCursor() const;
+    QString wordUnderCursor() const;
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-//    void keyPressEvent(QKeyEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
 
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &, int);
 
-//public slots:
-//    void onCompleterActivated(const QString &completion);
-//    void onCurosPosChange(void);
+public slots:
+    void onCompleterActivated(const QString &completion);
+    void onCurosPosChange(void);
 
 private:
     // 显示行号
     QWidget *lineNumberArea;
     // 自动补全
-//    QCompleter *keyWordsComplter;
-//    QStringList keyWordsList;
-//    QTextCursor curTextCursor;
-//    QRect curTextCursorRect;
-//    QString completerPrefix;
+    QCompleter *keyWordsCompleter;
+    QStringList keyWordsList;
+    QTextCursor curTextCursor;
+    QRect curTextCursorRect;
+    QString completerPrefix;
 };
 
 class LineNumberArea : public QWidget
