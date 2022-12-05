@@ -20,7 +20,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
                  << "slots" << "static" << "struct"
                  << "template" << "typedef" << "typename"
                  << "union" << "unsigned" << "virtual"
-                 << "void" << "volatile" ;
+                 << "void" << "volatile" << "#include" << "iostream";
 
     keyWordsCompleter = new QCompleter(keyWordsList);
     keyWordsCompleter->setWidget(this);
@@ -38,6 +38,9 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
+
+    this->setTabChangesFocus(false);
+    this->setTabStopDistance(20);
 }
 
 

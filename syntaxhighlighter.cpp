@@ -4,6 +4,31 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
 {
     HighlightingRule rule;
 
+    //类名:
+    classFormat.setFontWeight(QFont::Bold);
+    classFormat.setForeground(Qt::darkMagenta);
+    rule.pattern = QRegularExpression("\\b[A-Za-z]+\\b");
+    rule.format = classFormat;
+    highlightingRules.append(rule);
+
+    //单行注释:浅灰
+    singleLineCommentFormat.setForeground(Qt::lightGray);
+    rule.pattern = QRegularExpression("//[^\n]*");
+    rule.format = singleLineCommentFormat;
+    highlightingRules.append(rule);
+
+    //多行注释,只设定了样式,具体匹配在highlightBlock中设置
+    multiLineCommentFormat.setForeground(Qt::lightGray);
+
+    //头文件+字符串
+    quotationFormat.setForeground(Qt::darkGreen);
+    rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
+    rule.format = quotationFormat;
+    highlightingRules.append(rule);
+    rule.pattern = QRegularExpression(QStringLiteral("\'.*\'"));
+    rule.format = quotationFormat;
+    highlightingRules.append(rule);
+
     //设定关键词的高亮样式
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
@@ -30,33 +55,8 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
         highlightingRules.append(rule);
     }
 
-    //类名:
-    classFormat.setFontWeight(QFont::Bold);
-    classFormat.setForeground(Qt::darkMagenta);
-    rule.pattern = QRegularExpression("\\b[A-Za-z]+\\b");
-    rule.format = classFormat;
-    highlightingRules.append(rule);
-
-    //单行注释:浅灰
-    singleLineCommentFormat.setForeground(Qt::lightGray);
-    rule.pattern = QRegularExpression("//[^\n]*");
-    rule.format = singleLineCommentFormat;
-    highlightingRules.append(rule);
-
-    //多行注释,只设定了样式,具体匹配在highlightBlock中设置
-    multiLineCommentFormat.setForeground(Qt::lightGray);
-
-    //头文件+字符串
-    quotationFormat.setForeground(Qt::darkGreen);
-    rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
-    rule.format = quotationFormat;
-    highlightingRules.append(rule);
-    rule.pattern = QRegularExpression(QStringLiteral("\'.*\'"));
-    rule.format = quotationFormat;
-    highlightingRules.append(rule);
-
     //函数标记为斜体蓝色
-    functionFormat.setFontItalic(true);
+    //functionFormat.setFontItalic(true);
     functionFormat.setForeground(Qt::blue);
     rule.pattern = QRegularExpression("\\b[A-Za-z0-9_]+(?=\\()");
     rule.format = functionFormat;
@@ -64,6 +64,17 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
 
     commentStartExpression = QRegularExpression(QStringLiteral("/\\*"));
     commentEndExpression = QRegularExpression(QStringLiteral("\\*/"));
+
+//    //标点符号：红色
+//    punctuationFormat.setForeground(Qt::red);
+//    rule.pattern = QRegularExpression("^['\"{}\\(\\)\\[\\]\\*&.?!,…:;]+$");
+//    rule.format = punctuationFormat;
+//    highlightingRules.append(rule);
+
+//    headerFormat.setForeground(Qt::darkGreen);
+//    rule.pattern = QRegularExpression("^#include\\s<.+>$"); //设置正则表达式
+//    rule.format = headerFormat;
+//    highlightingRules.append(rule);
 }
 
 void syntaxHighlighter::highlightBlock(const QString &text)

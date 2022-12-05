@@ -25,6 +25,8 @@ protected:
      QRegularExpression commentStartExpression; //注释的高亮
      QRegularExpression commentEndExpression;
 
+     QTextCharFormat punctuationFormat;         //标点符号
+     QTextCharFormat headerFormat;              //头文件
      QTextCharFormat keywordFormat;             //关键词
      QTextCharFormat classFormat;               //类名
      QTextCharFormat singleLineCommentFormat;   //单行注释

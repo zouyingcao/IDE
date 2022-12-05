@@ -342,13 +342,17 @@ void MainWindow::on_compile_triggered()
     //确定保存了的情况后
     if(!filePath.isEmpty()){
         QProcess p(0);
-        QString command ="D:\\SEUCompiler.exe";//编译的程序
+        QString command ="D:\\QtProject\\Compiler.exe";//编译的程序
+        p.setProgram(command);
         QStringList args;
-        args.append(QDir::toNativeSeparators(fileName));
-        cout<<args;
-
-        p.startDetached(command,args);//command是要执行的命令,args是参数
-        cout<<codec->toUnicode(p.readAllStandardError());
+        args<<filePath;
+        p.setArguments(args);
+        p.start();
+        p.waitForStarted(); //等待程序启动
+        p.waitForFinished();//等待程序关闭
+        QString output=QString::fromLocal8Bit(p.readAllStandardOutput()); //程序输出信息
+        ui->textBrowser_asm->setText(output);
+        ui->textBrowser_log->setText(codec->toUnicode(p.readAllStandardError()));
     }
 }
 
