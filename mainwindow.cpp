@@ -174,8 +174,11 @@ void MainWindow::on_saveAs_triggered()
             str<<currentTextEdit->toPlainText();
             out.close();
 
-            QRegularExpression re(tr("(?<=\\/)\\w+\\.cpp|(?<=\\/)\\w+\\.c|(?<=\\/)\\w+\\.h|(?<=\\/)\\w+\\.txt"));
-            fileName=re.match(savePath).captured();
+            //QRegularExpression re(tr("(?<=\\/)\\w+\\.cpp|(?<=\\/)\\w+\\.c|(?<=\\/)\\w+\\.h|(?<=\\/)\\w+\\.txt"));
+            //fileName=re.match(savePath).captured();
+            int cnt=savePath.length();
+            int i=savePath.lastIndexOf("/");
+            fileName=savePath.right(cnt-i-1);
             filePath=savePath;
             ui->tabWidget->currentWidget()->setToolTip(savePath);// 放文件另存为的路径
             ui->tabWidget->setTabText(ui->tabWidget->currentIndex(),fileName);
