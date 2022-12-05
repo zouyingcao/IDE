@@ -47,15 +47,11 @@ private slots:
     void on_quickReplace_triggered();
     void on_tabWidget_tabCloseRequested(int index);
     void on_tabWidget_currentChanged(int index);
-
     void on_run_triggered();
-
     void on_syntaxCheck_triggered();
-
     void on_CandR_triggered();
-
     void on_stop_triggered();
-
+    void documentWasModified();
 private:
     Ui::MainWindow *ui;
     //QTextEdit *currentTextEdit;
