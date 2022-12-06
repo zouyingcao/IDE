@@ -493,7 +493,29 @@ void MainWindow::on_syntaxCheck_triggered()
     }
     //确定保存了的情况后
     if(!filePath.isEmpty()){
-
+        if(isWindowModified()){
+            int r=QMessageBox::warning(this, tr("提示"),
+                                       tr("the text has been modified.\nDo you want to save it ?"),
+                                       QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+            if(r==QMessageBox::Cancel)
+                return;//无动作退出
+            else if(r==QMessageBox::Yes)
+                on_save_triggered();
+            else if(r==QMessageBox::No)
+                ui->textBrowser_log->append("对之前的文件版本进行语法检查\n");
+        }
+        QProcess p(0);
+        QString command ="D:\\QtProject\\CompilerCheck.exe";//语法检查的程序
+        p.setProgram(command);
+        QStringList args;
+        args<<filePath;
+        p.setArguments(args);
+        p.start();
+        p.waitForStarted(); //等待程序启动
+        p.waitForFinished();//等待程序关闭
+        ui->textBrowser_log->setText("正在语法检查 "+filePath+"\n");
+        ui->textBrowser_asm->setText(QString::fromLocal8Bit(p.readAllStandardOutput())); //cout的内容
+        ui->textBrowser_log->append(QString::fromLocal8Bit(p.readAllStandardError())); // cerr的输出信息
     }
 }
 
