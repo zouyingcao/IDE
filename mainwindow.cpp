@@ -529,6 +529,24 @@ void MainWindow::on_CandR_triggered()
 //停止运行
 void MainWindow::on_stop_triggered()
 {
+    //检查是否存在死循环的exe
+    QProcess process;
+    process.start("tasklist");
+    process.waitForFinished();
 
+    QByteArray result = process.readAllStandardOutput();
+    QString str = result;
+    if(str.contains("Compiler.exe")){//编译
+        QProcess p;
+        QString c = "taskkill /im Compiler.exe /f";
+        p.execute(c);
+        p.close();
+    }
+    else if(str.contains("minsys_asm.exe")){//汇编
+        QProcess p;
+        QString c = "taskkill /im minsys_asm.exe /f";
+        p.execute(c);
+        p.close();
+    }
 }
 
