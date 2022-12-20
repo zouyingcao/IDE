@@ -7,7 +7,7 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
     //类名:
     classFormat.setFontWeight(QFont::Bold);
     classFormat.setForeground(Qt::darkMagenta);
-    rule.pattern = QRegularExpression("\\b[A-Za-z]+\\b");
+    rule.pattern = QRegularExpression("\\b[A-Za-z_0-9]+\\b");
     rule.format = classFormat;
     highlightingRules.append(rule);
 
@@ -21,6 +21,7 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
     multiLineCommentFormat.setForeground(Qt::lightGray);
 
     //头文件+字符串
+    quotationFormat.setFontWeight(QFont::Bold);
     quotationFormat.setForeground(Qt::darkGreen);
     rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
     rule.format = quotationFormat;
@@ -55,9 +56,10 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
         highlightingRules.append(rule);
     }
 
-    //函数标记为斜体蓝色
+    //函数标记为青色
     //functionFormat.setFontItalic(true);
-    functionFormat.setForeground(Qt::blue);
+    functionFormat.setForeground(Qt::darkCyan);
+    functionFormat.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression("\\b[A-Za-z0-9_]+(?=\\()");
     rule.format = functionFormat;
     highlightingRules.append(rule);
@@ -65,9 +67,20 @@ syntaxHighlighter::syntaxHighlighter(QTextDocument *parent) : QSyntaxHighlighter
     commentStartExpression = QRegularExpression(QStringLiteral("/\\*"));
     commentEndExpression = QRegularExpression(QStringLiteral("\\*/"));
 
-//    //标点符号：红色
+    //数字:蓝色
+    numberFormat.setForeground(Qt::blue);
+    rule.pattern = QRegularExpression("\\b[0-9]+");
+    rule.format = numberFormat;
+    highlightingRules.append(rule);
+    hexNumberFormat.setForeground(Qt::blue);
+    hexNumberFormat.setFontWeight(QFont::Bold);
+    rule.pattern = QRegularExpression("\\b0[xX][0-9a-fA-F]+");
+    rule.format = hexNumberFormat;
+    highlightingRules.append(rule);
+
+    //标点符号：红色
 //    punctuationFormat.setForeground(Qt::red);
-//    rule.pattern = QRegularExpression("^['\"{}\\(\\)\\[\\]\\*&.?!,…:;]+$");
+//    rule.pattern = QRegularExpression("\\b['\"{}\\(\\)\\[\\]\\*&.?!,…:;]+");
 //    rule.format = punctuationFormat;
 //    highlightingRules.append(rule);
 

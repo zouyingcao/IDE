@@ -33,6 +33,8 @@ protected:
      QTextCharFormat multiLineCommentFormat;    //多行注释
      QTextCharFormat quotationFormat;           //头文件引用&字符串
      QTextCharFormat functionFormat;            //函数
+     QTextCharFormat numberFormat;              //数字
+     QTextCharFormat hexNumberFormat;           //十六进制数字
 };
 
 #endif // SYNTAXHIGHLIGHTER_H

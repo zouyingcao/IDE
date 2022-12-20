@@ -471,15 +471,48 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_coe->append(data);
 
         data.clear();
-        QFile coefile1("D:\\QtProject\\dmem32.coe");
+        QFile coefile1("D:\\QtProject\\dmem32_1.coe");
         if(!coefile1.open(QIODevice::ReadOnly | QIODevice::Text))
-            qDebug()<<"prgmip32.coe文件未打开!";
+            qDebug()<<"dmem32_1.coe文件未打开!";
         while(!coefile1.atEnd()){
             QByteArray array = coefile1.readLine();
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->append("\ndmem32.coe文件内容如下：\n");
+        ui->textBrowser_coe->append("\ndmem32_1.coe文件内容如下：\n");
+        ui->textBrowser_coe->append(data);
+        data.clear();
+        QFile coefile2("D:\\QtProject\\dmem32_2.coe");
+        if(!coefile2.open(QIODevice::ReadOnly | QIODevice::Text))
+            qDebug()<<"dmem32_2.coe文件未打开!";
+        while(!coefile2.atEnd()){
+            QByteArray array = coefile2.readLine();
+            QString str(array);
+            data.append(str);
+        }
+        ui->textBrowser_coe->append("\ndmem32_2.coe文件内容如下：\n");
+        ui->textBrowser_coe->append(data);
+        data.clear();
+        QFile coefile3("D:\\QtProject\\dmem32_3.coe");
+        if(!coefile3.open(QIODevice::ReadOnly | QIODevice::Text))
+            qDebug()<<"dmem32_3.coe文件未打开!";
+        while(!coefile3.atEnd()){
+            QByteArray array = coefile3.readLine();
+            QString str(array);
+            data.append(str);
+        }
+        ui->textBrowser_coe->append("\ndmem32_3.coe文件内容如下：\n");
+        ui->textBrowser_coe->append(data);
+        data.clear();
+        QFile coefile4("D:\\QtProject\\dmem32_4.coe");
+        if(!coefile4.open(QIODevice::ReadOnly | QIODevice::Text))
+            qDebug()<<"dmem32_4.coe文件未打开!";
+        while(!coefile4.atEnd()){
+            QByteArray array = coefile4.readLine();
+            QString str(array);
+            data.append(str);
+        }
+        ui->textBrowser_coe->append("\ndmem32_4.coe文件内容如下：\n");
         ui->textBrowser_coe->append(data);
     }
 }
