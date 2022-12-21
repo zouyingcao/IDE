@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/exe">
+	<file>exes/Assembler.exe</file>
+        <file>exes/Compiler.exe</file>
+        <file>exes/CompilerCheck.exe</file>
+    </qresource>
+</RCC>

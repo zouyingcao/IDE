@@ -366,8 +366,23 @@ void MainWindow::on_compile_triggered()
             else if(r==QMessageBox::No)
                 ui->textBrowser_log->append("已启动编译之前的文件版本\n");
         }
+
+        QString EXEName_src = ":/exe/exes/Compiler.exe";
+        QString EXEName_Dst = "Compiler.exe";
+        QFile EXEFile_src(EXEName_src);
+        QFile EXEFile_Dst(EXEName_Dst);
+        if (EXEFile_Dst.open(QIODevice::WriteOnly)) {
+            if (EXEFile_src.open(QIODevice::ReadOnly)) {
+                QByteArray tmp = EXEFile_src.readAll();
+                EXEFile_Dst.write(tmp);
+            }
+        }
+        EXEFile_Dst.close();
+        EXEFile_src.close();
+        QString command = EXEName_Dst;
+
         QProcess p(0);
-        QString command ="D:\\QtProject\\Compiler.exe";//编译的程序
+        //QString command ="D:\\QtProject\\Compiler.exe";//编译的程序
         p.setProgram(command);
         QStringList args;
         args<<filePath;
@@ -431,8 +446,22 @@ void MainWindow::on_run_triggered()
         // 确定了文件保存为最新版本的情况
         ui->textBrowser_log->append("正在运行 "+filePath+"\n");
 
+        QString EXEName_src = ":/exe/exes/Assembler.exe";
+        QString EXEName_Dst = "Assembler.exe";
+        QFile EXEFile_src(EXEName_src);
+        QFile EXEFile_Dst(EXEName_Dst);
+        if (EXEFile_Dst.open(QIODevice::WriteOnly)) {
+            if (EXEFile_src.open(QIODevice::ReadOnly)) {
+                QByteArray tmp = EXEFile_src.readAll();
+                EXEFile_Dst.write(tmp);
+            }
+        }
+        EXEFile_Dst.close();
+        EXEFile_src.close();
+        QString command = EXEName_Dst;
+
         QProcess p(0);
-        QString command ="D:\\QtProject\\minsys_asm.exe";//汇编器程序
+        //QString command ="D:\\QtProject\\minsys_asm.exe";//汇编器程序
         p.setProgram(command);
         QStringList args;
         args<<"ObjectCode.txt";
@@ -446,7 +475,7 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_log->setText("正在运行 "+filePath+"，生成COE文件中...\n");
         //log文件
         QString errordata;
-        QFile file("D:\\QtProject\\asmError.log");
+        QFile file("asmError.log");
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"asmError.log文件未打开!";
         while(!file.atEnd()){
@@ -459,7 +488,7 @@ void MainWindow::on_run_triggered()
 
         //程序输出信息coe文件
         QString data;
-        QFile coefile("D:\\QtProject\\prgmip32.coe");
+        QFile coefile("prgmip32.coe");
         if(!coefile.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"prgmip32.coe文件未打开!";
         while(!coefile.atEnd()){
@@ -471,7 +500,7 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_coe->append(data);
 
         data.clear();
-        QFile coefile1("D:\\QtProject\\dmem32_1.coe");
+        QFile coefile1("dmem32_1.coe");
         if(!coefile1.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"dmem32_1.coe文件未打开!";
         while(!coefile1.atEnd()){
@@ -482,7 +511,7 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_coe->append("\ndmem32_1.coe文件内容如下：\n");
         ui->textBrowser_coe->append(data);
         data.clear();
-        QFile coefile2("D:\\QtProject\\dmem32_2.coe");
+        QFile coefile2("dmem32_2.coe");
         if(!coefile2.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"dmem32_2.coe文件未打开!";
         while(!coefile2.atEnd()){
@@ -493,7 +522,7 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_coe->append("\ndmem32_2.coe文件内容如下：\n");
         ui->textBrowser_coe->append(data);
         data.clear();
-        QFile coefile3("D:\\QtProject\\dmem32_3.coe");
+        QFile coefile3("dmem32_3.coe");
         if(!coefile3.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"dmem32_3.coe文件未打开!";
         while(!coefile3.atEnd()){
@@ -504,7 +533,7 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_coe->append("\ndmem32_3.coe文件内容如下：\n");
         ui->textBrowser_coe->append(data);
         data.clear();
-        QFile coefile4("D:\\QtProject\\dmem32_4.coe");
+        QFile coefile4("dmem32_4.coe");
         if(!coefile4.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"dmem32_4.coe文件未打开!";
         while(!coefile4.atEnd()){
@@ -537,8 +566,23 @@ void MainWindow::on_syntaxCheck_triggered()
             else if(r==QMessageBox::No)
                 ui->textBrowser_log->append("对之前的文件版本进行语法检查\n");
         }
+
+        QString EXEName_src = ":/exe/exes/CompilerCheck.exe";
+        QString EXEName_Dst = "CompilerCheck.exe";
+        QFile EXEFile_src(EXEName_src);
+        QFile EXEFile_Dst(EXEName_Dst);
+        if (EXEFile_Dst.open(QIODevice::WriteOnly)) {
+            if (EXEFile_src.open(QIODevice::ReadOnly)) {
+                QByteArray tmp = EXEFile_src.readAll();
+                EXEFile_Dst.write(tmp);
+            }
+        }
+        EXEFile_Dst.close();
+        EXEFile_src.close();
+        QString command = EXEName_Dst;
+
         QProcess p(0);
-        QString command ="D:\\QtProject\\CompilerCheck.exe";//语法检查的程序
+        //QString command ="D:\\QtProject\\CompilerCheck.exe";//语法检查的程序
         p.setProgram(command);
         QStringList args;
         args<<filePath;
