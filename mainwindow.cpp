@@ -461,7 +461,7 @@ void MainWindow::on_run_triggered()
         QString command = EXEName_Dst;
 
         QProcess p(0);
-        //QString command ="D:\\QtProject\\minsys_asm.exe";//汇编器程序
+        //QString command ="D:\\QtProject\\Assembler.exe";//汇编器程序
         p.setProgram(command);
         QStringList args;
         args<<"ObjectCode.txt";
@@ -619,9 +619,9 @@ void MainWindow::on_stop_triggered()
         p.execute(c);
         p.close();
     }
-    else if(str.contains("minsys_asm.exe")){//汇编
+    else if(str.contains("Assembler.exe")){//汇编
         QProcess p;
-        QString c = "taskkill /im minsys_asm.exe /f";
+        QString c = "taskkill /im Assembler.exe /f";
         p.execute(c);
         p.close();
     }
