@@ -125,8 +125,6 @@ void MainWindow::on_openFile_triggered()
             currentTextEdit->setPlainText(file.readAll()); // setText()设置内容, toPlainText()获取内容
             filePath = path;
             ui->tabWidget->currentWidget()->setToolTip(path);// 放打开文件的路径
-//            QRegularExpression re(tr("(?<=\\/)\\w+\\.cpp|(?<=\\/)\\w+\\.c|(?<=\\/)\\w+\\.h|(?<=\\/)\\w+\\.txt"));
-//            fileName=re.match(filePath).captured();//捕捉文件名
             int cnt=filePath.length();
             int i=filePath.lastIndexOf("/");
             fileName=filePath.right(cnt-i-1);
@@ -393,7 +391,16 @@ void MainWindow::on_compile_triggered()
         p.waitForFinished();//等待程序关闭
         ui->stop->setEnabled(false);
         ui->textBrowser_log->setText("正在编译 "+filePath+"\n");
-        QString output=QString::fromLocal8Bit(p.readAllStandardOutput()); //程序输出信息
+        //QString output=QString::fromLocal8Bit(p.readAllStandardOutput()); //程序输出信息
+        QString output;
+        QFile file("ObjectCode.txt");
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            qDebug()<<"ObjectCode.txt文件未打开!";
+        while(!file.atEnd()){
+            QByteArray array = file.readLine();
+            QString str(array);
+            output.append(str);
+        }
         ui->textBrowser_asm->setText(output);
 
         QFile markFile(fileName+"Mark.txt");
@@ -461,7 +468,7 @@ void MainWindow::on_run_triggered()
         QString command = EXEName_Dst;
 
         QProcess p(0);
-        //QString command ="D:\\QtProject\\Assembler.exe";//汇编器程序
+        //QString command ="D:\\QtProject\\minsys_asm.exe";//汇编器程序
         p.setProgram(command);
         QStringList args;
         args<<"ObjectCode.txt";
@@ -472,7 +479,7 @@ void MainWindow::on_run_triggered()
         ui->stop->setEnabled(true);
         p.waitForFinished();//等待程序关闭
         ui->stop->setEnabled(false);
-        ui->textBrowser_log->setText("正在运行 "+filePath+"，生成COE文件中...\n");
+        ui->textBrowser_log->setText("正在运行 "+filePath+"，生成.o文件中...\n");
         //log文件
         QString errordata;
         QFile file("asmError.log");
@@ -486,8 +493,59 @@ void MainWindow::on_run_triggered()
         ui->textBrowser_log->append(errordata);
         ui->textBrowser_log->append(QString::fromLocal8Bit(p.readAllStandardError())); // cerr的输出信息
 
-        //程序输出信息coe文件
         QString data;
+        QFile objectfile("prgmip32.o");
+        if(!objectfile.open(QIODevice::ReadOnly | QIODevice::Text))
+            qDebug()<<"prgmip32.o文件未打开!";
+        while(!objectfile.atEnd()){
+            QByteArray array = objectfile.readLine();
+            QString str(array);
+            data.append(str);
+        }
+        ui->textBrowser_o->setText("目标文件内容如下：\n");
+        ui->textBrowser_o->append(data);
+
+        // new added: 添加链接器
+        EXEName_src = ":/exe/exes/Linker.exe";
+        EXEName_Dst = "Linker.exe";
+        QFile EXEFile_src_1(EXEName_src);
+        QFile EXEFile_Dst_1(EXEName_Dst);
+        if (EXEFile_Dst_1.open(QIODevice::WriteOnly)) {
+            if (EXEFile_src_1.open(QIODevice::ReadOnly)) {
+                QByteArray tmp = EXEFile_src_1.readAll();
+                EXEFile_Dst_1.write(tmp);
+            }
+        }
+        EXEFile_Dst_1.close();
+        EXEFile_src_1.close();
+        command = EXEName_Dst;
+
+        QProcess program(0);
+        program.setProgram(command);
+        QStringList args_1;
+        args_1<<"bios.o"<<"prgmip32.o"<<"interrupt.o";
+        program.setArguments(args_1);
+        program.start();
+        program.waitForStarted(); //等待程序启动
+        ui->stop->setEnabled(true);
+        program.waitForFinished();//等待程序关闭
+        ui->stop->setEnabled(false);
+        ui->textBrowser_log->append("正在链接各个.o文件（BIOS、用户程序、中断处理程序）中...\n");
+        //日志
+//        QString logdata;
+//        QFile log("logStr.txt");
+//        if(!log.open(QIODevice::ReadOnly | QIODevice::Text))
+//            qDebug()<<"logStr.txt文件未打开!";
+//        while(!log.atEnd()){
+//            QByteArray array = log.readLine();
+//            QString str(array);
+//            logdata.append(str);
+//        }
+//        ui->textBrowser_log->append(logdata);
+        ui->textBrowser_log->append(QString::fromLocal8Bit(program.readAllStandardError())); // cerr的输出信息
+
+        //程序输出信息coe文件
+        data.clear();
         QFile coefile("prgmip32.coe");
         if(!coefile.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug()<<"prgmip32.coe文件未打开!";
@@ -496,8 +554,8 @@ void MainWindow::on_run_triggered()
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->setText("prgmip32.coe文件内容如下：\n");
-        ui->textBrowser_coe->append(data);
+        ui->textBrowser_coe_code->setText("prgmip32.coe文件内容如下：\n");
+        ui->textBrowser_coe_code->append(data);
 
         data.clear();
         QFile coefile1("dmem32_1.coe");
@@ -508,8 +566,8 @@ void MainWindow::on_run_triggered()
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->append("\ndmem32_1.coe文件内容如下：\n");
-        ui->textBrowser_coe->append(data);
+        ui->textBrowser_coe_data->setText("\ndmem32_1.coe文件内容如下：\n");
+        ui->textBrowser_coe_data->append(data);
         data.clear();
         QFile coefile2("dmem32_2.coe");
         if(!coefile2.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -519,8 +577,8 @@ void MainWindow::on_run_triggered()
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->append("\ndmem32_2.coe文件内容如下：\n");
-        ui->textBrowser_coe->append(data);
+        ui->textBrowser_coe_data->append("\ndmem32_2.coe文件内容如下：\n");
+        ui->textBrowser_coe_data->append(data);
         data.clear();
         QFile coefile3("dmem32_3.coe");
         if(!coefile3.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -530,8 +588,8 @@ void MainWindow::on_run_triggered()
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->append("\ndmem32_3.coe文件内容如下：\n");
-        ui->textBrowser_coe->append(data);
+        ui->textBrowser_coe_data->append("\ndmem32_3.coe文件内容如下：\n");
+        ui->textBrowser_coe_data->append(data);
         data.clear();
         QFile coefile4("dmem32_4.coe");
         if(!coefile4.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -541,8 +599,8 @@ void MainWindow::on_run_triggered()
             QString str(array);
             data.append(str);
         }
-        ui->textBrowser_coe->append("\ndmem32_4.coe文件内容如下：\n");
-        ui->textBrowser_coe->append(data);
+        ui->textBrowser_coe_data->append("\ndmem32_4.coe文件内容如下：\n");
+        ui->textBrowser_coe_data->append(data);
     }
 }
 

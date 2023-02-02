@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>886</width>
+    <width>1124</width>
     <height>600</height>
    </rect>
   </property>
@@ -24,7 +24,21 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="4,0" columnstretch="3,0,0,0,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="4,0" columnstretch="3,0,0,0,0,0,0">
+    <item row="0" column="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="Line" name="line_1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0" rowspan="2" colspan="2">
      <layout class="QVBoxLayout" name="verticalLayout_left" stretch="4,0,1,0">
       <item>
@@ -97,23 +111,40 @@
        <widget class="QTextBrowser" name="textBrowser_asm"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_coe">
+       <widget class="QLabel" name="label_o">
         <property name="text">
-         <string>  运行结果（COE文件）：</string>
+         <string>  汇编结果（目标.o文件）：</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="textBrowser_coe"/>
+       <widget class="QTextBrowser" name="textBrowser_o"/>
       </item>
      </layout>
     </item>
-    <item row="0" column="2">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
+    <item row="0" column="6">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label_coe_data">
+        <property name="text">
+         <string>  运行结果（代码COE文件）：</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="textBrowser_coe_code"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_coe_code">
+        <property name="text">
+         <string>  运行结果（数据COE文件）：</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="textBrowser_coe_data"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -122,7 +153,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>886</width>
+     <width>1124</width>
      <height>21</height>
     </rect>
    </property>
@@ -313,7 +344,7 @@
     <string>编译</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F5</string>
+    <string>Ctrl+F9</string>
    </property>
   </action>
   <action name="paste">
@@ -407,6 +438,9 @@
    <property name="text">
     <string>运行</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F10</string>
+   </property>
   </action>
   <action name="CandR">
    <property name="enabled">
@@ -414,6 +448,9 @@
    </property>
    <property name="text">
     <string>编译运行</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
    </property>
   </action>
   <action name="syntaxCheck">
@@ -423,6 +460,9 @@
    <property name="text">
     <string>语法检查</string>
    </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
   </action>
   <action name="stop">
    <property name="enabled">
@@ -430,6 +470,9 @@
    </property>
    <property name="text">
     <string>停止执行</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F2</string>
    </property>
   </action>
  </widget>
