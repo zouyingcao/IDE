@@ -468,18 +468,16 @@ void MainWindow::on_run_triggered()
         QString command = EXEName_Dst;
 
         QProcess p(0);
-        //QString command ="D:\\QtProject\\minsys_asm.exe";//汇编器程序
         p.setProgram(command);
         QStringList args;
         args<<"ObjectCode.txt";
-        //args<<"testinterface.asm";
         p.setArguments(args);
         p.start();
         p.waitForStarted(); //等待程序启动
         ui->stop->setEnabled(true);
         p.waitForFinished();//等待程序关闭
         ui->stop->setEnabled(false);
-        ui->textBrowser_log->setText("正在运行 "+filePath+"，生成.o文件中...\n");
+        ui->textBrowser_log->setText("正在运行 "+filePath+"，生成.o文件中...");
         //log文件
         QString errordata;
         QFile file("asmError.log");
