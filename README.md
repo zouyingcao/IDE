@@ -1,5 +1,5 @@
 # IDE
-##### based on Qt
+#### based on Qt
 
 ### 软件快捷键
 ① 文本操作
